@@ -1,4 +1,6 @@
-let timeLeft = 25 * 60; // 25 minutes
+let streak = localStorage.getItem("streak") || 0;
+document.getElementById("streak").textContent = streak;
+let timeLeft = 10;
 let timerDisplay = document.getElementById("timer");
 let startBtn = document.getElementById("startBtn");
 let interval;
@@ -19,9 +21,10 @@ startBtn.addEventListener("click", function () {
         timeLeft--;
 
         if (timeLeft < 0) {
-            clearInterval(interval);
-            alert("Focus session completed!");
-        }
+    clearInterval(interval);
+    updateStreak();
+    alert("Focus session completed!");
+}
 
     }, 1000);
 });
@@ -38,3 +41,14 @@ function updateScore() {
 }
 
 setInterval(updateScore, 1000);
+function updateStreak() {
+    let today = new Date().toDateString();
+    let lastDate = localStorage.getItem("lastDate");
+
+    if (lastDate !== today) {
+        streak++;
+        localStorage.setItem("streak", streak);
+        localStorage.setItem("lastDate", today);
+        document.getElementById("streak").textContent = streak;
+    }
+}
