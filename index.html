@@ -6,21 +6,57 @@
 </head>
 <body>
 
-    <div class="container">
-        <h1>ProcrastiNO</h1>
+<!-- ===== HERO SECTION ===== -->
+<section class="hero">
+    <h1>ProcrastiNO</h1>
+    <p>Destroy procrastination. Build deep focus. Track your streak.</p>
+    <button id="heroStart">Start Focusing</button>
+</section>
+
+<!-- ===== DASHBOARD ===== -->
+<section class="dashboard">
+
+    <!-- LEFT PANEL (STATS) -->
+    <div class="card">
+        <div id="confetti-container"></div>
+        <h2>Daily Focus</h2>
 
         <input type="text" id="taskInput" placeholder="Enter your task">
 
-        <button id="startBtn">Start Focus</button>
+        <p id="statusMessage">Stay focused 💪</p>
 
-        <h2 id="timer">25:00</h2>
+        <p>⚠️ Distractions: <span id="distractionCount">0</span></p>
+        <p>🎯 Score: <span id="score">100</span>%</p>
+        <p>🏆 Best Score: <span id="bestScore">0</span></p>
+        <p>🔥 Streak: <span id="streak">0</span> days</p>
 
-        <p>Distractions: <span id="distractionCount">0</span></p>
-
-        <p>Score: <span id="score">100</span>%</p>
-        <p>Streak: <span id="streak">0</span> days</p>
+        <button onclick="toggleTheme()">Toggle Theme</button>
     </div>
 
-    <script src="script.js"></script>
+    <!-- RIGHT PANEL (TIMER) -->
+    <div class="card">
+        <h2>Focus Timer</h2>
+
+        <h1 id="timer">25:00</h1>
+
+        <div class="progress-bar">
+            <div id="progress"></div>
+        </div>
+
+        <button id="startBtn">Start Focus</button>
+        <button onclick="resetSession()">Reset</button>
+    </div>
+
+</section>
+
+<script src="script.js"></script>
+
+<script>
+/* Smooth scroll from hero to dashboard */
+document.getElementById("heroStart").addEventListener("click", function() {
+    document.querySelector(".dashboard").scrollIntoView({ behavior: "smooth" });
+});
+</script>
+
 </body>
 </html>
