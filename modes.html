@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Mode | ProcrastiNO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="modes-page">
+    <div class="bg-overlay"></div>
+
+    <div class="search-container fade-in">
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input 
+                type="text" 
+                id="templateSearch" 
+                placeholder="Search session type " 
+                autocomplete="off"
+            >
+        </div>
+    </div>
+
+    <div class="templates-footer fade-in">
+        <p class="input-label">Available Sessions</p>
+        <div class="templates-grid" id="templatesGrid">
+            <button class="template-pill" onclick="quickStart('Study Session','study')">📚 Study Session</button>
+            <button class="template-pill" onclick="quickStart('Math Revision','study')">📐 Math Revision</button>
+            <button class="template-pill" onclick="quickStart('Workout Session','workout')">💪 Workout Session</button>
+            <button class="template-pill" onclick="quickStart('Gym HIIT','workout')">🏃 Gym HIIT</button>
+            <button class="template-pill" onclick="quickStart('Job/Admin','admin')">📧 Job Session</button>
+            <button class="template-pill" onclick="quickStart('Email Cleanup','admin')">📩 Email Cleanup</button>
+            <button class="template-pill" onclick="quickStart('Creative Flow','creative')">🎨 Creative Session</button>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('templateSearch');
+        const pills = document.querySelectorAll('.template-pill');
+
+        // Search Filter Logic
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            pills.forEach(pill => {
+                const text = pill.innerText.toLowerCase();
+                pill.style.display = text.includes(term) ? "flex" : "none";
+            });
+        });
+
+        // QuickStart Logic
+        window.quickStart = function(task, mode) {
+            localStorage.setItem("currentTask", task);
+            window.location.href = "session.html?mode=" + encodeURIComponent(mode);
+        };
+
+        // Focus search bar on load
+        window.onload = () => searchInput.focus();
+    </script>
+</body>
+</html>

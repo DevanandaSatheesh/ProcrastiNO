@@ -1,62 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ProcrastiNO</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcrastiNO | Focus Island</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="home-page">
+    <div class="bg-overlay"></div>
 
-<!-- ===== HERO SECTION ===== -->
-<section class="hero">
-    <h1>ProcrastiNO</h1>
-    <p>Destroy procrastination. Build deep focus. Track your streak.</p>
-    <button id="heroStart">Start Focusing</button>
-</section>
+    <main class="landing-content fade-in">
+        <header>
+            <h1 class="hero-title">ProcrastiNO</h1>
+            <p class="hero-quote">“The best way to get started is to quit talking and begin doing.”</p>
+        </header>
 
-<!-- ===== DASHBOARD ===== -->
-<section class="dashboard">
-
-    <!-- LEFT PANEL (STATS) -->
-    <div class="card">
-        <div id="confetti-container"></div>
-        <h2>Daily Focus</h2>
-
-        <input type="text" id="taskInput" placeholder="Enter your task">
-
-        <p id="statusMessage">Stay focused 💪</p>
-
-        <p>⚠️ Distractions: <span id="distractionCount">0</span></p>
-        <p>🎯 Score: <span id="score">100</span>%</p>
-        <p>🏆 Best Score: <span id="bestScore">0</span></p>
-        <p>🔥 Streak: <span id="streak">0</span> days</p>
-
-        <button onclick="toggleTheme()">Toggle Theme</button>
-    </div>
-
-    <!-- RIGHT PANEL (TIMER) -->
-    <div class="card">
-        <h2>Focus Timer</h2>
-
-        <h1 id="timer">25:00</h1>
-
-        <div class="progress-bar">
-            <div id="progress"></div>
+        <div class="action-area">
+            <button class="primary-btn" id="startBtn">Get Started</button>
         </div>
+    </main>
 
-        <button id="startBtn">Start Focus</button>
-        <button onclick="resetSession()">Reset</button>
-    </div>
-
-</section>
-
-<script src="script.js"></script>
-
-<script>
-/* Smooth scroll from hero to dashboard */
-document.getElementById("heroStart").addEventListener("click", function() {
-    document.querySelector(".dashboard").scrollIntoView({ behavior: "smooth" });
-});
-</script>
-
+    <script>
+        // Simple Navigation Logic
+        document.getElementById("startBtn").addEventListener("click", function () {
+            // Direct user to the modes/search page
+            window.location.href = "modes.html";
+        });
+    </script>
 </body>
 </html>

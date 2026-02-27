@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Session | ProcrastiNO</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="session-page">
+    <div class="bg-overlay"></div>
+
+    <main class="dashboard-container fade-in">
+        
+        <section class="glass-card info-panel">
+            <header>
+                <h2 id="modeTitle" class="mode-badge">Initializing...</h2>
+                <h1 id="taskDisplay" class="current-task">Loading Task...</h1>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Distractions</span>
+                    <span id="distractionCount" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Focus Score</span>
+                    <span id="score" class="stat-value highlight">100%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Streak</span>
+                    <span id="streak" class="stat-value">0</span>
+                </div>
+            </div>
+
+            <div class="status-box">
+                <p id="statusMessage">Stay in the flow 💪</p>
+                <small>Best Score: <span id="bestScore">0</span></small>
+            </div>
+
+            <footer class="panel-footer">
+                <button onclick="goBack()" class="secondary-btn">Exit Session</button>
+            </footer>
+        </section>
+
+        <section class="glass-card timer-panel">
+            <div class="timer-circle">
+                <svg class="progress-ring" width="280" height="280">
+                    <circle class="progress-ring__circle" stroke="white" stroke-width="8" fill="transparent" r="130" cx="140" cy="140"/>
+                </svg>
+                <h1 id="timer" class="timer-display">00:00</h1>
+            </div>
+
+            <div class="timer-controls">
+                <button id="startBtn" class="primary-btn">Start Flow</button>
+                <button onclick="resetSession()" class="reset-link">Reset Timer</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get("mode");
+        
+        // Timer Logic Variables
+        let totalTime;
+        let isRunning = false;
+        
+        // Mode Setup
+        const modeConfigs = {
+            study: { time: 50 * 60, title: "Monk Mode", class: "theme-indigo" },
+            workout: { time: 4 * 60, title: "Interval Training", class: "theme-orange" },
+            admin: { time: 25 * 60, title: "Admin Sprint", class: "theme-slate" },
+            creative: { time: 0, title: "Creative Flow", class: "theme-gold" }
+        };
+
+        const config = modeConfigs[mode] || modeConfigs.admin;
+        totalTime = config.time;
+        document.getElementById("modeTitle").textContent = config.title;
+        document.body.classList.add(config.class);
+
+        let timeLeft = totalTime;
+        let interval = null;
+        let distractionCount = 0;
+
+        // Load Persisted Data
+        document.getElementById("taskDisplay").textContent = localStorage.getItem("currentTask") || "Focus Session";
+        document.getElementById("streak").textContent = localStorage.getItem("streak") || 0;
+        document.getElementById("bestScore").textContent = localStorage.getItem("bestScore") || 0;
+
+        const timerDisplay = document.getElementById("timer");
+        const circle = document.querySelector('.progress-ring__circle');
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+
+        function setProgress(percent) {
+            const offset = circumference - (percent / 100 * circumference);
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(Math.abs(timeLeft) / 60);
+            let seconds = Math.floor(Math.abs(timeLeft % 60));
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // Start Button Logic
+        document.getElementById("startBtn").addEventListener("click", function () {
+            if (isRunning) {
+                clearInterval(interval);
+                this.textContent = "Resume Flow";
+            } else {
+                this.textContent = "Pause Session";
+                interval = setInterval(() => {
+                    if (mode === "creative") timeLeft++;
+                    else timeLeft--;
+
+                    updateTimerDisplay();
+                    if (mode !== "creative") {
+                        const percent = (timeLeft / totalTime) * 100;
+                        setProgress(percent);
+                    }
+
+                    if (mode !== "creative" && timeLeft <= 0) {
+                        finishSession();
+                    }
+                }, 1000);
+            }
+            isRunning = !isRunning;
+        });
+
+        function finishSession() {
+            clearInterval(interval);
+            alert("Session Completed! Great focus.");
+            updateStreak();
+            goBack();
+        }
+
+        // Anti-Procrastination Tracking (Tab Switching)
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden && isRunning) {
+                distractionCount++;
+                document.getElementById("distractionCount").textContent = distractionCount;
+                updateScore();
+            }
+        });
+
+        function updateScore() {
+            let score = Math.max(0, 100 - (distractionCount * 10));
+            document.getElementById("score").textContent = score + "%";
+            if (distractionCount > 2) document.getElementById("statusMessage").textContent = "Focus slipping! ⚠️";
+        }
+
+        window.resetSession = () => location.reload();
+        window.goBack = () => window.location.href = "modes.html";
+        
+        updateTimerDisplay();
+        setProgress(100);
+    });
+    </script>
+</body>
+</html>
